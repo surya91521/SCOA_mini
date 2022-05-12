@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
 import "./App.css";
+import axios from 'axios';
 export default class Form extends React.Component {
   state = {
     Population_Size: "",
@@ -12,40 +13,15 @@ export default class Form extends React.Component {
   };
 
   change = e => {
-    this.props.onChange({ [e.target.name]: e.target.value });
+    // this.props.onChange({ [e.target.name]: e.target.value });
     this.setState({
       [e.target.name]: e.target.value
     });
   };
 
-  onSubmit = async(e) => {
+  onClear = (e) => {
     e.preventDefault();
-    // this.props.onSubmit(this.state);
-    try {
-      let res = await fetch("http://127.0.0.1:5000/submit", {
-        method: 'post',
-        body: JSON.stringify({
-          Population_Size: this.state.Population_Size,
-          Mutation_Rate: this.state.Mutation_Rate,
-          Crossover_rate: this.state.Crossover_rate,
-          Crossover_Points: this.state.Crossover_Points,
-          Generations: this.state.Generations,
-          Run_GA: this.state.Run_GA
-        }),
-      });
-      this.state.Result = JSON.stringify(res);
-    } catch (err) {
-      console.log(err);
-    }
-      this.setState({
-        Population_Size: "",
-        Mutation_Rate: "",
-        Crossover_rate: "",
-        Crossover_Points: "",
-        Generations: "",
-        Run_GA: ""
-      });
-    this.props.onChange({
+    this.setState({
       Population_Size: "",
       Mutation_Rate: "",
       Crossover_rate: "",
@@ -53,6 +29,37 @@ export default class Form extends React.Component {
       Generations: "",
       Run_GA: ""
     });
+  }
+
+  onSubmit = async(e) => {
+    e.preventDefault();
+    const body = {
+          Population_Size: this.state.Population_Size,
+          Mutation_Rate: this.state.Mutation_Rate,
+          Crossover_rate: this.state.Crossover_rate,
+          Crossover_Points: this.state.Crossover_Points,
+          Generations: this.state.Generations,
+          Run_GA: this.state.Run_GA
+    }
+    console.log(body);
+    axios({
+      method: 'post',
+      url: 'http://127.0.0.1:5000/submit',
+      data: body, // you are sending body instead
+      headers: {
+       // 'Authorization': `bearer ${token}`,
+      'Content-Type': 'application/json'
+      }, 
+    }).then(res => {
+      this.setState({Result: res.data})
+      console.log(this.state.Result);
+    }).catch(err => {
+      console.log('err', err);
+    }).finally(res => {
+      console.log('finally', res);
+    })
+    return;
+   
   };
 
   render() {
@@ -104,9 +111,12 @@ export default class Form extends React.Component {
         />
         <br />
         <button onClick={e => this.onSubmit(e)}>Submit</button>
+        <button onClick={e => this.onClear(e)}>Clear</button>
       </form>
-      <p>{this.state.Result}</p>  
     <br />
+    <p>
+    {JSON.stringify(this.state.Result)}
+    </p>
     </div>
     );
   }

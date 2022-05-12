@@ -449,9 +449,9 @@ class GARunner:
         print("Please state the population size (an integer >= 1)")
         self.PopulationSize = int(population_Size)
         print("Please state the mutation rate (a decimal point '.', followed by a nonnegative integer, so that 0 <= mutation rate <= 1)")
-        self.MutationRate = int(mutation_Rate)
+        self.MutationRate = float(mutation_Rate)
         print("Please state the crossover rate (a decimal point '.', followed by a nonnegative integer, so that 0 <= crossover rate <= 1)")
-        self.CrossoverRate = int(crossover_rate)
+        self.CrossoverRate = float(crossover_rate)
         print("Please state the number of crossover points (either '1' or '2')")
         self.NumberOfCrossoverPoints = int(crossover_Points) 
         print("Please state the maximum number of generations (an integer >= 1)")
@@ -465,10 +465,10 @@ class GARunner:
 ##        print('Population.List: \n'+ self.GA.Population.ToString('   ', ' '))
         #print()
         return{'Results of Run #' : str(self.RunCount) + ':',
-        'Generation count: ' : str(self.GA.GenerationCount),
+        'Generation_count: ' : str(self.GA.GenerationCount),
         'Population\'s initial best fitness: ' : str(self.GA.InitialBestFitness) + ', or ' + str(self.GA.PercentInitialBestFitness) + ' percent fit',
         'Population\'s final best fitness:   ' : str(self.GA.FinalBestFitness) + ', or ' + str(self.GA.PercentFinalBestFitness) + ' percent fit',
-        'Average fitness delta: ' : str(round(self.GA.AverageFitnessDelta, 3)),
+        'Average_fitness_delta' : str(round(self.GA.AverageFitnessDelta, 3)),
         'Most fit individual: ' : self.GA.Population.MostFitIndividual().Genotype.ValuesToString()} 
 
     def WriteResultsToOutputFile(self):
